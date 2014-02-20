@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ message.subject }}{% endblock title %}
+{% block heading %}{{ message.subject }}{% endblock heading %}
+
+{% block main_content %}
+
+<ul class="breadcrumbs">
+	{% for crumb in crumbs %}
+	<li><a href="#">{{crumb}}</a></li>
+	{% endfor %}
+	<li class="current"><a href="#">{{ author }}</a></li></ul>
+
+{{message|format_mail}}
+
+{% endblock main_content %}
+
+{% block side_content %}
+<div class="panel">
+	{% if authors %}
+	<h5>In this conversation</h5>
+	<ul>
+	{% for author in authors %}
+	<li>{{author}}</li>
+	{% endfor %}
+		</ul>
+	{% endif %}
+		</div>	
+{% endblock side_content %}

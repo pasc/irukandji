@@ -1,0 +1,60 @@
+#!/usr/bin/python
+
+crumbs = ['top-level', 'list-name']
+
+MEDIA_URL="../static/"
+
+from jinja2 import Environment, PackageLoader
+
+env = Environment(loader=PackageLoader('irukandji', 'templates'))
+
+from irukandji.mailformat import format_mail
+env.filters['format_mail'] = format_mail
+
+
+template = env.get_template('message.html')
+from irukandji.mailparser import generate_message
+
+from mailtree import create_mailtree
+trees = create_mailtree('../mbox')
+
+import mailbox
+
+box = mailbox.mbox('../mbox')
+
+import codecs
+
+i = 0
+for m in box:
+    print i
+    with codecs.open("output/msg%s.html" % i, "w", "utf-8") as f:
+        author = m.get('From')
+        data = ""
+        if m.get_content_type() == "text/plain":
+            data = m.get_payload(None, True)
+            charset =  m.get_param('charset')
+            if charset:
+                data = data.decode(charset)
+        else:
+            for part in m.walk():
+                if part.get_content_type() == "text/plain":
+                    data = part.get_payload(None, True)
+                    charset = part.get_param('charset')
+                    if charset:
+                        data = data.decode(charset)
+                    break
+
+        message_id = map(lambda x: x[1:-1],
+                            filter(lambda x: x[0] == '<' and x[-1] == '>',
+                                   m.get('Message-id').split()))
+        print "Looking up: %s" % message_id[0]
+        real_tree = trees[message_id[0]].message_id
+        print "and now: %s" % real_tree
+        authors = trees[real_tree].authors
+        print authors
+        f.write(template.render(message=generate_message(data, author, m.get('Subject')), MEDIA_URL=MEDIA_URL, authors=authors, author=author, crumbs=crumbs))
+
+    i += 1
+
+
+
