@@ -26,7 +26,7 @@ class Message:
                 level += 1
             else:
                 matches = tok.split('>')
-                if matches > 1:
+                if len(matches) > 1:
                     level += len(matches) - 1
                 else:
                     return level

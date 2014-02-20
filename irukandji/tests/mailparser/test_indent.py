@@ -5,6 +5,7 @@ indent_data = [
  (0, ' this also has no indent', ' this also has no indent'),
  (1, '>this is squished', 'this is squished'),
  (1, '> this is a normal one level', ' this is a normal one level'),
+ (1, '> This is a single level where I think a > b', ' This is a single level where I think a > b'),
  (2, '>> This is a reply', ' This is a reply'),
  (2, '> > This is also a reply', ' This is also a reply'),
  (3, '>>> This is a reply to a reply', ' This is a reply to a reply'),
