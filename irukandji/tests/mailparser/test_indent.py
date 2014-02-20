@@ -6,8 +6,11 @@ indent_data = [
  (1, '>this is squished', 'this is squished'),
  (1, '> this is a normal one level', ' this is a normal one level'),
  (1, '> This is a single level where I think a > b', ' This is a single level where I think a > b'),
+ (1, 'john> this is also a single level', ' this is also a single level'),
  (2, '>> This is a reply', ' This is a reply'),
  (2, '> > This is also a reply', ' This is also a reply'),
+ (2, '> john> this is a second level too', ' this is a second level too'),
+ (2, 'mike> john> this is rare', ' this is rare'),
  (3, '>>> This is a reply to a reply', ' This is a reply to a reply'),
  (3, '> >> This went through two different MUAs', ' This went through two different MUAs'),
         ]
