@@ -18,7 +18,7 @@ def test_indent():
 
 def check_indent(indent, text):
     message = Message()
-    assert message.indent_level(text) == indent
+    assert message.indent_level(text) == indent, message.indent_level(text)
 
 def check_strip(indent, text, strip):
     message = Message()
