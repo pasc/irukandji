@@ -14,7 +14,7 @@ def format_mail(mail):
             level -= 1
 
 
-        ret += "<p>" + n.content + "</p>"
+        ret += "<p>%s</p>" % n.content
 
         level = n.level
 
