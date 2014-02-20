@@ -18,4 +18,7 @@ def format_mail(mail):
 
         level = n.level
 
+    while level > 0:
+        ret += "</div></blockquote>"
+        level -= 1
     return ret
