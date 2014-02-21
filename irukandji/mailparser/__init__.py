@@ -13,11 +13,39 @@ class Node:
         return "Node ([%s] depth = %s, %s)" % (self.author, self.level, self.content)
 
 class Message:
-    def __init__(self, author="", subject=""):
+    def __init__(self, text="", author="", subject=""):
         self.author = author
         self.subject = subject
         self.content = []
 
+        level = 0
+        # Array of authors with depth as index
+        self.authors = {}
+        n = Node (0)
+
+        self.content = [n]
+
+        lines = text.splitlines()
+        for i, l in enumerate(lines):
+            c_level = self.indent_level(l)
+
+            if c_level > level:
+                if c_level not in self.authors:
+                    self.authors[c_level] = parse_author(self.strip_levels(level, lines[i-1]))
+
+            content_line = self.strip_levels(c_level, l).strip()
+
+            if c_level != level:
+                n = Node(c_level)
+                if c_level in self.authors:
+                    n.author = self.authors[c_level]
+                self.content.append(n)
+                level = c_level
+            elif content_line == "":
+                n = Node(c_level)
+                self.content.append(n)
+
+            n.append(content_line + " ")
 
     def indent_level(self, text):
         level = 0
@@ -54,36 +82,5 @@ def parse_author(author_line):
     return ' '.join(filter(lambda x: x.istitle(), author_line.split()[1:]))
 
 def generate_message(text, author, subject):
-    message = Message(author, subject)
-    level = 0
-    # Array of authors with depth as index
-    message.authors = {}
-    n = Node (0)
-
-    content = [n]
-
-    lines = text.splitlines()
-    for i, l in enumerate(lines):
-        c_level = message.indent_level(l)
-
-        if c_level > level:
-            if c_level not in message.authors:
-                message.authors[c_level] = parse_author(message.strip_levels(level, lines[i-1]))
-
-        content_line = message.strip_levels(c_level, l).strip()
-
-        if c_level != level:
-            n = Node(c_level)
-            if c_level in message.authors:
-                n.author = message.authors[c_level]
-            content.append(n)
-            level = c_level
-        elif content_line == "":
-            n = Node(c_level)
-            content.append(n)
-
-        n.append(content_line + " ")
-
-    message.content = content
-
+    message = Message(text, author, subject)
     return message
