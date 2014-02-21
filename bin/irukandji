@@ -28,7 +28,6 @@ i = 0
 for m in box:
     print i
     with codecs.open("output/msg%s.html" % i, "w", "utf-8") as f:
-        author = m.get('From')
         data = ""
         if m.get_content_type() == "text/plain":
             data = m.get_payload(None, True)
@@ -51,6 +50,7 @@ for m in box:
         real_tree = trees[message_id[0]].message_id
         print "and now: %s" % real_tree
         authors = trees[real_tree].authors
+        author = trees[real_tree].nodes[message_id[0]].author
         print authors
         f.write(template.render(message=generate_message(data, author, m.get('Subject')), MEDIA_URL=MEDIA_URL, authors=authors, author=author, crumbs=crumbs))
 
