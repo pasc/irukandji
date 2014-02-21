@@ -11,6 +11,7 @@ indent_data = [
  (2, '> > This is also a reply', ' This is also a reply'),
  (2, '> john> this is a second level too', ' this is a second level too'),
  (2, 'mike> john> this is rare', ' this is rare'),
+ (2, '>>', ''),
  (3, '>>> This is a reply to a reply', ' This is a reply to a reply'),
  (3, '> >> This went through two different MUAs', ' This went through two different MUAs'),
         ]
