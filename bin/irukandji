@@ -15,7 +15,7 @@ env.filters['format_mail'] = format_mail
 template = env.get_template('message.html')
 from irukandji.mailparser import generate_message
 
-from mailtree import create_mailtree
+from mailtree import create_mailtree, parse_message_ids
 trees = create_mailtree('../mbox')
 
 import mailbox
@@ -27,7 +27,9 @@ import codecs
 i = 0
 for m in box:
     print i
-    with codecs.open("output/msg%s.html" % i, "w", "utf-8") as f:
+    msg_id = parse_message_ids(m.get('Message-Id', ''))[0]
+
+    with codecs.open("output/msg-%s.html" % msg_id, "w", "utf-8") as f:
         data = ""
         if m.get_content_type() == "text/plain":
             data = m.get_payload(None, True)
@@ -43,14 +45,11 @@ for m in box:
                         data = data.decode(charset)
                     break
 
-        message_id = map(lambda x: x[1:-1],
-                            filter(lambda x: x[0] == '<' and x[-1] == '>',
-                                   m.get('Message-id').split()))
-        print "Looking up: %s" % message_id[0]
-        real_tree = trees[message_id[0]].message_id
+        print "Looking up: %s" % msg_id
+        real_tree = trees[msg_id].message_id
         print "and now: %s" % real_tree
         authors = trees[real_tree].authors
-        author = trees[real_tree].nodes[message_id[0]].author
+        author = trees[real_tree].nodes[msg_id].author
         print authors
         f.write(template.render(message=generate_message(data, author, m.get('Subject')), MEDIA_URL=MEDIA_URL, authors=authors, author=author, crumbs=crumbs))
 
